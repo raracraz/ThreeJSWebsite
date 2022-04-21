@@ -1,0 +1,65 @@
+import * as THREE from '/node_modules/three/build/three.module.js';
+import { TrackballControls } from '/node_modules/three/examples/jsm/controls/TrackballControls.js';
+
+// Scene
+const scene = new THREE.Scene();
+
+// Camera
+const camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 1000 );
+
+// Renderer
+const renderer = new THREE.WebGLRenderer({antialias: true});
+//renderer.setClearColor("#4F4F4F"); // Set background colour
+renderer.setSize(window.innerWidth, window.innerHeight);
+document.body.appendChild(renderer.domElement); // Add renderer to HTML as a canvas element
+
+// Make Canvas Responsive
+window.addEventListener('resize', () => {
+    renderer.setSize(window.innerWidth, window.innerHeight); // Update size
+    camera.aspect = window.innerWidth / window.innerHeight; // Update aspect ratio
+    camera.updateProjectionMatrix(); // Apply changes
+})
+
+//Add a light to the scene
+var light = new THREE.DirectionalLight(0xffffff, 1);
+light.position.set(5,3,5);
+scene.add(light);
+
+/* // Create box:
+const boxGeometry = new THREE.SphereGeometry(5.771, 32, 16); // Define geometry
+const boxMaterial = new THREE.MeshPhongMaterial({color: 'black', emissive: 'grey', shininess: 100}); // Define material
+const boxMesh = new THREE.Mesh(boxGeometry, boxMaterial); // Build box
+boxMesh.rotation.set(0, 0, 0); // Set box initial rotation
+scene.add(boxMesh); // Add box to canvas */
+
+var geometry = new THREE.SphereGeometry(1, 32, 32);
+var material = new THREE.MeshPhongMaterial();
+var earthmesh = new THREE.Mesh(geometry, material);
+
+scene.add(earthmesh);
+
+// Axes Helper
+const axesHelper = new THREE.AxesHelper(5);
+scene.add( axesHelper ); // X axis = red, Y axis = green, Z axis = blue
+
+//Trackball Controls for Camera 
+const controls = new TrackballControls(camera, renderer.domElement); 
+controls.rotateSpeed = 4;
+controls.dynamicDampingFactor = 0.15;
+
+// Rendering Function
+const rendering = function() {
+    // Rerender every time the page refreshes (pause when on another tab)
+    requestAnimationFrame(rendering); 
+
+    // Constantly rotate box
+    //scene.rotation.x += 0.005;
+    //scene.rotation.z -= 0.005;
+    //scene.rotation.y -= 0.005; 
+
+
+    // render the scene
+    renderer.render(scene, camera);
+}
+
+rendering();
