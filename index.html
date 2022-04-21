@@ -1,22 +1,61 @@
 <!DOCTYPE html>
-<html lang=”en”>
-<head>    
+<html lang="en">
+
+<head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My First three.js Project</title>
+    <title>Three space view</title>
     <link rel="stylesheet" href="css/style.css">
-    <script type="importmap">
-        {
-            "imports": {
-                "three": "https://unpkg.com/three@0.138.0/build/three.module.js",
-                "OrbitControls": "https://unpkg.com/three@0.138.0/examples/jsm/controls/OrbitControls.js"
-            }
-        }
-    </script>
+
 </head>
+
 <body>
-    <!-- // This line imports our javascript code from our /js directory -->
-    <script type="module" src="./js/main.js"></script>
+    <script src="three.min.js"></script>
+    <script>
+  let scene, camera, renderer, starGeo, stars;
+
+        function init() {
+            scene = new THREE.Scene();
+            camera = new THREE.PerspectiveCamera(60,window.innerWidth / window.innerHeight, 1, 1000);
+            camera.position.z = 1;
+            camera.rotation.x = Math.PI/2;
+
+            renderer = new THREE.WebGLRenderer();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            document.body.appendChild(renderer.domElement);
+
+            const points = [];
+
+            for(let i=0; i<6000; i++); {
+                star = new THREE.Vector3(
+                    Math.random() * 600 - 300,
+                    Math.random() * 600 - 300,
+                    Math.random() * 600 - 300
+                );
+                points.push(star);
+            }
+            let starGeo = new THREE.BufferGeometry().setFromPoints(points);
+            let sprite = new THREE.TextureLoader().load('star.png');
+            let starMaterial = new THREE.PointsMaterial({
+                color: 0xaaaaaa,
+                size: 0.7,
+                map: sprite
+            });
+
+            stars = new THREE.Points(starGeo, starMaterial);
+            scene.add(stars);
+            animate();
+        }
+
+        function animate() {
+            renderer.render(scene, camera);
+            requestAnimationFrame(animate);
+        }
+
+        init();
+    </script>
+
 </body>
+
 </html>
